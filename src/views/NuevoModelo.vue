@@ -15,9 +15,13 @@ const obtenerNuevoId = async () => {
   const res = await fetch('http://localhost:3000/modelos')
   const modelos = await res.json()
 
-  if (modelos.length === 0) return '1'
+  let ultimoId = 0
 
-  const ultimoId = Math.max(...modelos.map((m) => Number(m.id)))
+  modelos.forEach((m) => {
+    if (Number(m.id) > ultimoId) {
+      ultimoId = Number(m.id)
+    }
+  })
 
   return (ultimoId + 1).toString()
 }

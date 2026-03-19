@@ -7,11 +7,16 @@ const anioFundacion = ref('')
 
 const obtenerNuevoId = async () => {
   const res = await fetch('http://localhost:3000/marcas')
-  const marcas = await res.json()
+  const data = await res.json()
 
-  if (marcas.length === 0) return '1'
+  let ultimoId = 0
 
-  const ultimoId = Math.max(...marcas.map((m) => Number(m.id)))
+  data.forEach((m) => {
+    if (Number(m.id) > ultimoId) {
+      ultimoId = Number(m.id)
+    }
+  })
+
   return (ultimoId + 1).toString()
 }
 
