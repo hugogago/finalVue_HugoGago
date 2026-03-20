@@ -17,6 +17,12 @@
       "nombre": "r",
       "origen": "r",
       "anioFundacion": 2134
+    },
+    {
+      "id": "4",
+      "nombre": "ford",
+      "origen": "espalña",
+      "anioFundacion": 1234
     }
   ],
   "modelos": [
@@ -46,6 +52,20 @@
       "precioDia": 98,
       "puertas": 4,
       "sillaInfantil": false
+    },
+    {
+      "id": "2",
+      "idModelo": "1",
+      "precioDia": 5,
+      "puertas": 3,
+      "sillaInfantil": true
+    },
+    {
+      "id": "3",
+      "idModelo": "1",
+      "precioDia": 5,
+      "puertas": 5,
+      "sillaInfantil": false
     }
   ],
   "clientes": [
@@ -74,12 +94,17 @@
     {
       "id": "2",
       "nombre": "Hugo",
-      "dni": "71067889L",
+      "dni": "71067879L",
       "alquileres": [
         {
           "idVehiculo": "1",
           "numDias": 1,
           "fechaInic": "2026-03-31"
+        },
+        {
+          "idVehiculo": "",
+          "numDias": 3,
+          "fechaInic": "2026-03-11"
         }
       ]
     }

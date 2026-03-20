@@ -7,13 +7,19 @@ const clienteSeleccionado = ref(null)
 const nombre = ref('')
 const dni = ref('')
 
-onMounted(async () => {
+const cargarClientes = async () => {
   const res = await fetch('http://localhost:3000/clientes')
   clientes.value = await res.json()
+}
+
+onMounted(async () => {
+  await cargarClientes()
 })
 
 const seleccionarCliente = (c) => {
   clienteSeleccionado.value = c
+  nombre.value = c.nombre
+  dni.value = c.dni
 }
 
 const obtenerNuevoId = async () => {
@@ -49,10 +55,51 @@ const crearCliente = async () => {
     body: JSON.stringify(nuevoCliente),
   })
 
+  await cargarClientes()
+
   alert('Cliente añadido')
 
+  limpiarFormulario()
+}
+
+const modificarCliente = async () => {
+  const clienteModificado = {
+    ...clienteSeleccionado.value,
+    nombre: nombre.value,
+    dni: dni.value,
+  }
+
+  await fetch(`http://localhost:3000/clientes/${clienteSeleccionado.value.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(clienteModificado),
+  })
+
+  await cargarClientes()
+
+  alert('Cliente modificado')
+
+  limpiarFormulario()
+}
+
+const eliminarCliente = async () => {
+  await fetch(`http://localhost:3000/clientes/${clienteSeleccionado.value.id}`, {
+    method: 'DELETE',
+  })
+
+  await cargarClientes()
+
+  alert('Cliente eliminado')
+
+  limpiarFormulario()
+}
+
+const limpiarFormulario = () => {
   nombre.value = ''
   dni.value = ''
+  clienteSeleccionado.value = null
 }
 </script>
 
@@ -84,12 +131,18 @@ const crearCliente = async () => {
         </ul>
       </div>
 
-      <h3>Nuevo Cliente</h3>
+      <h3>Nuevo / Editar Cliente</h3>
 
       <input v-model="nombre" placeholder="Nombre" />
       <input v-model="dni" placeholder="DNI" />
 
-      <button @click="crearCliente">Alta</button>
+      <br /><br />
+
+      <button @click="crearCliente" :disabled="clienteSeleccionado">Alta</button>
+
+      <button @click="modificarCliente" :disabled="!clienteSeleccionado">Modificar</button>
+
+      <button @click="eliminarCliente" :disabled="!clienteSeleccionado">Eliminar</button>
     </div>
   </div>
 </template>
