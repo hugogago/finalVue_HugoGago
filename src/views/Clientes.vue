@@ -64,9 +64,10 @@ const crearCliente = async () => {
 
 const modificarCliente = async () => {
   const clienteModificado = {
-    ...clienteSeleccionado.value,
+    id: clienteSeleccionado.value.id,
     nombre: nombre.value,
     dni: dni.value,
+    alquileres: clienteSeleccionado.value.alquileres,
   }
 
   await fetch(`http://localhost:3000/clientes/${clienteSeleccionado.value.id}`, {
@@ -106,8 +107,8 @@ const limpiarFormulario = () => {
 <template>
   <h1>Clientes</h1>
 
-  <div style="display: flex">
-    <div style="width: 40%">
+  <div>
+    <div>
       <ul>
         <li
           v-for="c in clientes"
@@ -120,7 +121,7 @@ const limpiarFormulario = () => {
       </ul>
     </div>
 
-    <div style="width: 60%">
+    <div>
       <div v-if="clienteSeleccionado">
         <h3>Alquileres</h3>
 

@@ -53,21 +53,51 @@ const guardarModelo = async () => {
 </script>
 
 <template>
-  <h2>Nuevo Modelo</h2>
+  <div class="form-container">
+    <h2>Nuevo Modelo</h2>
 
-  <form @submit.prevent="guardarModelo">
-    <select v-model="idMarca" required>
-      <option value="">Selecciona marca</option>
+    <form @submit.prevent="guardarModelo">
+      <select v-model="idMarca" required>
+        <option value="">Selecciona marca</option>
 
-      <option v-for="m in marcas" :key="m.id" :value="m.id">
-        {{ m.nombre }}
-      </option>
-    </select>
+        <option v-for="m in marcas" :key="m.id" :value="m.id">
+          {{ m.nombre }}
+        </option>
+      </select>
 
-    <input v-model="modelo" placeholder="Nombre del modelo" required />
+      <input v-model="modelo" placeholder="Nombre del modelo" required />
 
-    <input type="number" v-model="extra" placeholder="Extra por modelo" />
+      <input type="number" v-model="extra" placeholder="Extra por modelo" />
 
-    <button>Guardar</button>
-  </form>
+      <button>Guardar</button>
+    </form>
+  </div>
 </template>
+<style scoped>
+.form-container {
+  background-color: white;
+  padding: 20px;
+  max-width: 300px;
+  border: 1px solid #ddd;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input {
+  margin-top: 5px;
+  padding: 6px;
+}
+
+button {
+  margin-top: 15px;
+  padding: 8px;
+}
+</style>

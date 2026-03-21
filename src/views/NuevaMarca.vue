@@ -47,14 +47,49 @@ const guardarMarca = async () => {
 </script>
 
 <template>
-  <h2>Nueva Marca</h2>
-  <form @submit.prevent="guardarMarca">
-    <input v-model="nombre" placeholder="Nombre" required />
+  <div class="form-container">
+    <h2>Nueva Marca</h2>
 
-    <input v-model="origen" placeholder="Origen" required />
+    <form @submit.prevent="guardarMarca">
+      <label>Nombre</label>
+      <input v-model="nombre" required />
 
-    <input type="number" v-model="anioFundacion" placeholder="Año fundación" required />
+      <label>Origen</label>
+      <input v-model="origen" required />
 
-    <button>Guardar</button>
-  </form>
+      <label>Año fundación</label>
+      <input type="number" v-model="anioFundacion" required />
+
+      <button>Guardar</button>
+    </form>
+  </div>
 </template>
+
+<style scoped>
+.form-container {
+  background-color: white;
+  padding: 20px;
+  max-width: 300px;
+  border: 1px solid #ddd;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input {
+  margin-top: 5px;
+  padding: 6px;
+}
+
+button {
+  margin-top: 15px;
+  padding: 8px;
+}
+</style>

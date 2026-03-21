@@ -43,6 +43,12 @@
       "idMarca": "3",
       "modelo": "er",
       "extraPorModelo": 34
+    },
+    {
+      "id": "4",
+      "idMarca": "1",
+      "modelo": "tttttt",
+      "extraPorModelo": 0
     }
   ],
   "vehiculos": [
@@ -88,6 +94,11 @@
           "idVehiculo": "1",
           "numDias": 3,
           "fechaInic": "2026-03-26"
+        },
+        {
+          "idVehiculo": "1",
+          "numDias": 5,
+          "fechaInic": "2026-03-25"
         }
       ]
     },

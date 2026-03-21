@@ -21,12 +21,18 @@
   </nav>
 </template>
 
-<style>
+<style scoped>
 .menu {
-  width: 200px;
-  background: #eee;
+  width: 220px;
+  background-color: #2c3e50;
+  color: white;
   height: 100vh;
   padding: 20px;
+}
+
+.menu h2 {
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 ul {
@@ -35,6 +41,19 @@ ul {
 }
 
 li {
-  margin-bottom: 10px;
+  margin: 10px 0;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.router-link-active {
+  font-weight: bold;
 }
 </style>

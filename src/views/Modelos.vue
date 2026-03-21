@@ -16,6 +16,21 @@ onMounted(async () => {
 const modelosFiltrados = () => {
   return modelos.value.filter((m) => m.idMarca === idMarcaSeleccionada.value)
 }
+
+const actualizarExtra = async (modelo) => {
+  await fetch(`http://localhost:3000/modelos/${modelo.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(modelo),
+  })
+
+  const resModelos = await fetch('http://localhost:3000/modelos')
+  modelos.value = await resModelos.json()
+
+  alert('Extra actualizado')
+}
 </script>
 
 <template>
@@ -31,7 +46,14 @@ const modelosFiltrados = () => {
 
   <ul v-if="idMarcaSeleccionada">
     <li v-for="m in modelosFiltrados()" :key="m.id">
-      {{ m.modelo }} - Extra: {{ m.extraPorModelo }}€
+      {{ m.modelo }} - Extra:
+
+      <span v-if="m.extraPorModelo > 0"> {{ m.extraPorModelo }} € </span>
+
+      <span v-else>
+        <input type="number" v-model="m.extraPorModelo" />
+        <button @click="actualizarExtra(m)">Guardar</button>
+      </span>
     </li>
   </ul>
 </template>

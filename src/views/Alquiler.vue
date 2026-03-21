@@ -12,6 +12,7 @@ const idVehiculo = ref('')
 const idCliente = ref('')
 const dias = ref('')
 const fecha = ref('')
+const resumen = ref(null)
 
 const vehiculosFiltrados = ref([])
 
@@ -39,6 +40,9 @@ const cargarVehiculos = () => {
 
 const alquilar = async () => {
   const cliente = clientes.value.find((c) => c.id === idCliente.value)
+  const vehiculo = vehiculos.value.find((v) => v.id === idVehiculo.value)
+  const modelo = modelos.value.find((m) => m.id === vehiculo.idModelo)
+  const marca = marcas.value.find((m) => m.id === modelo.idMarca)
 
   const nuevoAlquiler = {
     idVehiculo: idVehiculo.value,
@@ -56,6 +60,18 @@ const alquilar = async () => {
     body: JSON.stringify(cliente),
   })
 
+  const precioBase = vehiculo.precioDia * dias.value
+  const extra = modelo.extraPorModelo || 0
+  const total = precioBase + extra * dias.value
+
+  resumen.value = {
+    marca: marca.nombre,
+    modelo: modelo.modelo,
+    cliente: cliente.nombre,
+    dni: cliente.dni,
+    total,
+  }
+
   alert('Alquiler registrado')
 }
 </script>
@@ -63,7 +79,6 @@ const alquilar = async () => {
 <template>
   <h1>Alquiler</h1>
 
-  <!-- MARCA -->
   <select v-model="idMarca">
     <option value="">Selecciona marca</option>
     <option v-for="m in marcas" :key="m.id" :value="m.id">
@@ -71,7 +86,6 @@ const alquilar = async () => {
     </option>
   </select>
 
-  <!-- MODELO -->
   <select v-model="idModelo" :disabled="!idMarca">
     <option value="">Selecciona modelo</option>
     <option v-for="m in modelosFiltrados()" :key="m.id" :value="m.id">
@@ -81,7 +95,6 @@ const alquilar = async () => {
 
   <button @click="cargarVehiculos" :disabled="!idModelo">Cargar vehículos</button>
 
-  <!-- VEHICULOS -->
   <select v-model="idVehiculo" v-if="vehiculosFiltrados.length">
     <option value="">Selecciona vehículo</option>
     <option v-for="v in vehiculosFiltrados" :key="v.id" :value="v.id">
@@ -89,7 +102,6 @@ const alquilar = async () => {
     </option>
   </select>
 
-  <!-- CLIENTES -->
   <select v-model="idCliente">
     <option value="">Selecciona cliente</option>
     <option v-for="c in clientes" :key="c.id" :value="c.id">
@@ -102,4 +114,13 @@ const alquilar = async () => {
   <input type="date" v-model="fecha" />
 
   <button @click="alquilar">Alquilar</button>
+
+  <div v-if="resumen">
+    <h3>Resumen del alquiler</h3>
+
+    <p>Marca: {{ resumen.marca }}</p>
+    <p>Modelo: {{ resumen.modelo }}</p>
+    <p>Cliente: {{ resumen.cliente }} ({{ resumen.dni }})</p>
+    <p>Total: {{ resumen.total }} €</p>
+  </div>
 </template>

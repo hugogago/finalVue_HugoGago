@@ -61,32 +61,62 @@ const guardarVehiculo = async () => {
 </script>
 
 <template>
-  <h1>Nuevo Vehículo</h1>
+  <div class="form-container">
+    <h1>Nuevo Vehículo</h1>
 
-  <form @submit.prevent="guardarVehiculo">
-    <select v-model="idMarca" required>
-      <option value="">Marca</option>
-      <option v-for="m in marcas" :key="m.id" :value="m.id">
-        {{ m.nombre }}
-      </option>
-    </select>
+    <form @submit.prevent="guardarVehiculo">
+      <select v-model="idMarca" required>
+        <option value="">Marca</option>
+        <option v-for="m in marcas" :key="m.id" :value="m.id">
+          {{ m.nombre }}
+        </option>
+      </select>
 
-    <select v-model="idModelo" :disabled="!idMarca" required>
-      <option value="">Modelo</option>
-      <option v-for="m in modelosFiltrados()" :key="m.id" :value="m.id">
-        {{ m.modelo }}
-      </option>
-    </select>
+      <select v-model="idModelo" :disabled="!idMarca" required>
+        <option value="">Modelo</option>
+        <option v-for="m in modelosFiltrados()" :key="m.id" :value="m.id">
+          {{ m.modelo }}
+        </option>
+      </select>
 
-    <input type="number" v-model="precioDia" placeholder="Precio día" required />
+      <input type="number" v-model="precioDia" placeholder="Precio día" required />
 
-    <input type="number" v-model="puertas" placeholder="Puertas" required />
+      <input type="number" v-model="puertas" placeholder="Puertas" required />
 
-    <label>
-      Silla infantil
-      <input type="checkbox" v-model="sillaInfantil" />
-    </label>
+      <label>
+        Silla infantil
+        <input type="checkbox" v-model="sillaInfantil" />
+      </label>
 
-    <button>Guardar</button>
-  </form>
+      <button>Guardar</button>
+    </form>
+  </div>
 </template>
+<style scoped>
+.form-container {
+  background-color: white;
+  padding: 20px;
+  max-width: 300px;
+  border: 1px solid #ddd;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input {
+  margin-top: 5px;
+  padding: 6px;
+}
+
+button {
+  margin-top: 15px;
+  padding: 8px;
+}
+</style>
