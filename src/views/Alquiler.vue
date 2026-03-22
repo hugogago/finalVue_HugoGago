@@ -8,13 +8,15 @@ const clientes = ref([])
 
 const idMarca = ref('')
 const idModelo = ref('')
-const idVehiculo = ref('')
-const idCliente = ref('')
-const dias = ref('')
-const fecha = ref('')
-const resumen = ref(null)
 
 const vehiculosFiltrados = ref([])
+
+const idVehiculo = ref('')
+const idCliente = ref('')
+const numDias = ref('')
+const fecha = ref('')
+
+const resumen = ref('')
 
 onMounted(async () => {
   const resMarcas = await fetch('http://localhost:3000/marcas')
@@ -34,19 +36,16 @@ const modelosFiltrados = () => {
   return modelos.value.filter((m) => m.idMarca === idMarca.value)
 }
 
-const cargarVehiculos = () => {
+const buscarVehiculos = () => {
   vehiculosFiltrados.value = vehiculos.value.filter((v) => v.idModelo === idModelo.value)
 }
 
 const alquilar = async () => {
   const cliente = clientes.value.find((c) => c.id === idCliente.value)
-  const vehiculo = vehiculos.value.find((v) => v.id === idVehiculo.value)
-  const modelo = modelos.value.find((m) => m.id === vehiculo.idModelo)
-  const marca = marcas.value.find((m) => m.id === modelo.idMarca)
 
   const nuevoAlquiler = {
     idVehiculo: idVehiculo.value,
-    numDias: Number(dias.value),
+    numDias: Number(numDias.value),
     fechaInic: fecha.value,
   }
 
@@ -60,67 +59,64 @@ const alquilar = async () => {
     body: JSON.stringify(cliente),
   })
 
-  const precioBase = vehiculo.precioDia * dias.value
-  const extra = modelo.extraPorModelo || 0
-  const total = precioBase + extra * dias.value
+  const vehiculo = vehiculos.value.find((v) => v.id === idVehiculo.value)
+  const modelo = modelos.value.find((m) => m.id === vehiculo.idModelo)
+  const marca = marcas.value.find((m) => m.id === modelo.idMarca)
 
-  resumen.value = {
-    marca: marca.nombre,
-    modelo: modelo.modelo,
-    cliente: cliente.nombre,
-    dni: cliente.dni,
-    total,
+  let precio = vehiculo.precioDia * numDias.value
+
+  if (modelo.extraPorModelo && modelo.extraPorModelo > 0) {
+    precio += modelo.extraPorModelo * numDias.value
   }
 
-  alert('Alquiler registrado')
+  resumen.value = `${marca.nombre} ${modelo.modelo} - ${cliente.nombre} (${cliente.dni}) - ${precio}€`
 }
 </script>
 
 <template>
   <h1>Alquiler</h1>
 
-  <select v-model="idMarca">
-    <option value="">Selecciona marca</option>
-    <option v-for="m in marcas" :key="m.id" :value="m.id">
-      {{ m.nombre }}
-    </option>
-  </select>
+  <div>
+    <select v-model="idMarca">
+      <option value="">Marca</option>
+      <option v-for="m in marcas" :key="m.id" :value="m.id">
+        {{ m.nombre }}
+      </option>
+    </select>
 
-  <select v-model="idModelo" :disabled="!idMarca">
-    <option value="">Selecciona modelo</option>
-    <option v-for="m in modelosFiltrados()" :key="m.id" :value="m.id">
-      {{ m.modelo }}
-    </option>
-  </select>
+    <select v-model="idModelo" :disabled="!idMarca">
+      <option value="">Modelo</option>
+      <option v-for="m in modelosFiltrados()" :key="m.id" :value="m.id">
+        {{ m.modelo }}
+      </option>
+    </select>
 
-  <button @click="cargarVehiculos" :disabled="!idModelo">Cargar vehículos</button>
+    <button @click="buscarVehiculos" :disabled="!idMarca || !idModelo">Buscar</button>
+  </div>
 
-  <select v-model="idVehiculo" v-if="vehiculosFiltrados.length">
-    <option value="">Selecciona vehículo</option>
-    <option v-for="v in vehiculosFiltrados" :key="v.id" :value="v.id">
-      {{ v.precioDia }} €/día
-    </option>
-  </select>
+  <div v-if="vehiculosFiltrados.length">
+    <select v-model="idVehiculo">
+      <option value="">Vehículo</option>
+      <option v-for="v in vehiculosFiltrados" :key="v.id" :value="v.id">
+        {{ v.precioDia }} €/día
+      </option>
+    </select>
 
-  <select v-model="idCliente">
-    <option value="">Selecciona cliente</option>
-    <option v-for="c in clientes" :key="c.id" :value="c.id">
-      {{ c.nombre }}
-    </option>
-  </select>
+    <select v-model="idCliente">
+      <option value="">Cliente</option>
+      <option v-for="c in clientes" :key="c.id" :value="c.id">
+        {{ c.nombre }}
+      </option>
+    </select>
 
-  <input type="number" v-model="dias" placeholder="Días" />
+    <input type="number" v-model="numDias" placeholder="Días" />
+    <input type="date" v-model="fecha" />
 
-  <input type="date" v-model="fecha" />
-
-  <button @click="alquilar">Alquilar</button>
+    <button @click="alquilar">Alquilar</button>
+  </div>
 
   <div v-if="resumen">
-    <h3>Resumen del alquiler</h3>
-
-    <p>Marca: {{ resumen.marca }}</p>
-    <p>Modelo: {{ resumen.modelo }}</p>
-    <p>Cliente: {{ resumen.cliente }} ({{ resumen.dni }})</p>
-    <p>Total: {{ resumen.total }} €</p>
+    <h3>Resumen</h3>
+    <p>{{ resumen }}</p>
   </div>
 </template>

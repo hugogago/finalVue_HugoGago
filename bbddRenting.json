@@ -99,6 +99,11 @@
           "idVehiculo": "1",
           "numDias": 5,
           "fechaInic": "2026-03-25"
+        },
+        {
+          "idVehiculo": "1",
+          "numDias": 1,
+          "fechaInic": ""
         }
       ]
     },
